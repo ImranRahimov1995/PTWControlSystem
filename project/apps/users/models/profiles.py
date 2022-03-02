@@ -42,12 +42,16 @@ class Profile(TimeStamp, models.Model):
 
     def _get_code(self):
         if self.user.is_staff == True:
-            self.code = self.pk
-        else:
+            return False
+
+        if self.duty:
             count = Profile.objects.filter(duty=self.duty).count()
             if count == 0:
                 count = 1
             self.code = f"{self.duty}-0{count}"
+
+        else:
+            return False
 
     def save(self, *args, **kwargs):
         self._get_code()
